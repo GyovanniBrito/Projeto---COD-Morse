@@ -26,7 +26,7 @@ PASSO 1: Preparar o Arquivo de Entrada
 PASSO 2: Compilar o Código
    - Abra o terminalde comando na pasta do projeto.
    - Digite o comando:
-     gcc main.c -o tradutor
+     gcc main.c -o programa
 
 PASSO 3: Executar o Tradutor
    - No terminal, digite o comando:
