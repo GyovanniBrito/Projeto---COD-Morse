@@ -4,81 +4,88 @@
 
 #include <stdio.h>
 
-// Tabelas de referência (Vetores Globais)
+// Lista Alfabeto
 char alfabeto[26] = {
     'A','B','C','D','E','F','G','H','I','J','K','L','M',
     'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
 };
 
+// Lista código
+// matriz 26 elementos - 6 representa os espaços
 char morse[26][6] = {
     ".-","-...","-.-.","-..",".","..-.","--.","....","..",".---",
     "-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-",
     "..-","...-",".--","-..-","-.--","--.."
 };
 
-// --- FUNÇÃO DE BUSCA (Usa ponteiros e o índice j) ---
-void buscarEImprimir(char *sequencia, int tam) {
-    // Caso 1: Código Corrompido (Termina em '*')
-    if (*(sequencia + tam - 1) == '*') {
+// Função para buscar
+void buscarEImprimir(char *sequencia, int tam) {            // ponteiro para o primeiro caractere + tamanho do cod
+    // Se o código estiver corrompido
+    if (*(sequencia + tam - 1) == '*') {                    // verifica se existe o *
         printf("[");
         for (int i = 0; i < 26; i++) {
             int igual = 1;
             // Percorre os sinais antes do '*'
-            for (int j = 0; j < tam - 1; j++) {
-                if (*(sequencia + j) != morse[i][j]) {
+            for (int j = 0; j < tam - 1; j++) {                          // vetor percorre até a posição anterior ao asterisco
+                if (*(sequencia + j) != morse[i][j]) {                   // Se a sequencia da letra for diferente da guardada, esta descartada
                     igual = 0;
                 }
             }
-            if (igual == 1) printf("%c", alfabeto[i]);
+            if (igual == 1) printf("%c", alfabeto[i]);                  // imprime as possíveis letras
         }
         printf("]");
     } 
-    // Caso 2: Tradução Normal
+    // Tradução Normal
     else {
-        for (int i = 0; i < 26; i++) {
+        for (int i = 0; i < 26; i++) {                    // Se nao tiver *, percorre o a lista alfabeto
             int igual = 1;
             int j = 0;
-            // Compara sinal por sinal até o fim da string (\0)
-            while (*(sequencia + j) != '\0' || morse[i][j] != '\0') {
-                if (*(sequencia + j) != morse[i][j]) {
+            // Compara sinal por sinal até o fim da string
+            while (*(sequencia + j) != '\0' && morse[i][j] != '\0') {              // compara os sinais até as 2 listas acabarem
+                if (*(sequencia + j) != morse[i][j]) {                             // Se o sinal for diferente, a letra é descartada e vai pra próxima
                     igual = 0;
                 }
                 j++;
             }
-            if (igual == 1) printf("%c", alfabeto[i]);
+            if (igual == 1) printf("%c", alfabeto[i]);                            // imprime a letra que teve sinal igual
         }
     }
 }
 
-// --- FUNÇÃO RECURSIVA (Lê o arquivo e controla o fluxo) ---
+// Função Recursiva
+// Função para ler a entrada do código morse
 void traduzirRecursivo(FILE *arq, char *sequencia, int pos, int espacos) {
-    char sinal = fgetc(arq);
+    char sinal = fgetc(arq);                  // fgetc() - usada para pular o caractere
 
-    // Caso Base: Fim do arquivo
-    if (sinal == EOF) {
-        if (pos > 0) {
+    // Caso Base
+    if (sinal == EOF) {               // Se encontrar EOF, o arquivo acabou
+        if (pos > 0) {                // Verifica se ainda há algum sinal
             *(sequencia + pos) = '\0';
             buscarEImprimir(sequencia, pos);
         }
-        return;
+        return;             // encerra
     }
 
     // Se ler um sinal válido (. - *)
-    if (sinal == '.' || sinal == '-' || sinal == '*') {
+    if (sinal == '.' || sinal == '-' || sinal == '*') {           // confirma se o sinal é válido
         *(sequencia + pos) = sinal; 
-        traduzirRecursivo(arq, sequencia, pos + 1, 0); // Zera o contador de espaços
+        traduzirRecursivo(arq, sequencia, pos + 1, 0);            // zera o contador de espaços
     } 
+
     // Se ler um espaço ou quebra de linha
-    else if (sinal == ' ' || sinal == '\n') {
-        if (pos > 0) {
-            // Acabou uma letra: finaliza a string e traduz
+    else if (sinal == ' ' || sinal == '\n') {                    // se for espaço ou quebra de linhas a sequência dos sinais parou
+        if (pos > 0) {                                  // se posição for maior que zero, leu uma letra inteira
+
+            // Acabou uma letra -  finaliza a string e traduz
             *(sequencia + pos) = '\0';
             buscarEImprimir(sequencia, pos);
-            // Continua para o próximo caractere, agora com pos = 0
+
+            // Continua para o próximo caractere
+            // zera o pos
             traduzirRecursivo(arq, sequencia, 0, 1);
         } else {
-            // Lógica de espaço entre palavras:
-            // Se ler o 3º espaço seguido (sem ter lido sinais no meio), imprime espaço
+            // Lógica de espaço entre palavras
+            // Se ler o 3º espaço seguido, imprime espaço
             if (espacos == 3) {
                 printf(" ");
             }
@@ -87,9 +94,9 @@ void traduzirRecursivo(FILE *arq, char *sequencia, int pos, int espacos) {
     }
 }
 
-// --- FUNÇÃO PRINCIPAL ---
+// Função Principal
 int main() {
-    // Tenta abrir o arquivo para leitura
+    // Abre o arquivo para leitura
     FILE *arq = fopen("entrada.txt", "r");
     char sequencia[10]; // Buffer temporário para os sinais
 

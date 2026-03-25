@@ -6,3 +6,33 @@ INTEGRANTES:
 
 TURMA: 02N 11
 
+DESCRIÇÃO DO PROJETO:
+
+Este programa realiza a tradução de arquivos contendo código Morse para 
+o alfabeto. 
+
+
+PASSO A PASSO PARA EXECUTAR O PROGRAMA:
+
+
+PASSO 1: Preparar o Arquivo de Entrada
+
+   - Digite o código Morse no arquivo "entrada.txt". 
+   
+   Exemplo: 
+     ....  ---  .-..  .-    ..*
+     
+
+PASSO 2: Compilar o Código
+   - Abra o terminalde comando na pasta do projeto.
+   - Digite o comando:
+     gcc main.c -o tradutor
+
+PASSO 3: Executar o Tradutor
+   - No terminal, digite o comando:
+     ./programa
+
+PASSO 4: Verificar a Saída
+   - O resultado da tradução aparecerá diretamente no terminal.
+  
+
