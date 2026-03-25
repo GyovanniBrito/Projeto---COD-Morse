@@ -21,7 +21,7 @@ char morse[26][6] = {
 // Função para buscar
 void buscarEImprimir(char *sequencia, int tam) {            // ponteiro para o primeiro caractere + tamanho do cod
     // Se o código estiver corrompido
-    if (*(sequencia + tam - 1) == '*') {                    // verifica se existe o *
+    if (*(sequencia + tam - 1) == '*') {                    // verifica se existe o *, se existir o programa entra no loop guardando todas as possíveis letras
         printf("[");
         for (int i = 0; i < 26; i++) {
             int igual = 1;
@@ -40,8 +40,8 @@ void buscarEImprimir(char *sequencia, int tam) {            // ponteiro para o p
         for (int i = 0; i < 26; i++) {                    // Se nao tiver *, percorre o a lista alfabeto
             int igual = 1;
             int j = 0;
-            // Compara sinal por sinal até o fim da string
-            while (*(sequencia + j) != '\0' && morse[i][j] != '\0') {              // compara os sinais até as 2 listas acabarem
+            
+            while (*(sequencia + j) != '\0' && morse[i][j] != '\0') {              // compara sinal por sinal até encontrar a letra correspondente
                 if (*(sequencia + j) != morse[i][j]) {                             // Se o sinal for diferente, a letra é descartada e vai pra próxima
                     igual = 0;
                 }
@@ -67,7 +67,7 @@ void traduzirRecursivo(FILE *arq, char *sequencia, int pos, int espacos) {
     }
 
     // Se ler um sinal válido (. - *)
-    if (sinal == '.' || sinal == '-' || sinal == '*') {           // confirma se o sinal é válido
+    if (sinal == '.' || sinal == '-' || sinal == '*') {           // confirma se o sinal é válido, se sim aumenta a posição
         *(sequencia + pos) = sinal; 
         traduzirRecursivo(arq, sequencia, pos + 1, 0);            // zera o contador de espaços
     } 
